@@ -77,17 +77,29 @@ function App() {
   };
 
   const removeBookmark = async (bookmark: Bookmark) => {
-    const { currentVideoId } = await getActiveTabAndCurrentVideoId();
-    if (!currentVideoId) return;
+    const { activeTab } = await getActiveTabAndCurrentVideoId();
+    if (!activeTab) return;
+    chrome.tabs.sendMessage(
+      activeTab.id!,
+      {
+        type: "DELETE_BOOKMARK",
+        value: bookmark.id,
+      },
+      setBookmarks
+    );
 
-    const updatedBookmarks = bookmarks
-      .filter((b) => b.id !== bookmark.id)
-      .sort((a, b) => a.time - b.time);
+    // Works as well
+    // const { currentVideoId } = await getActiveTabAndCurrentVideoId();
+    // if (!currentVideoId) return;
 
-    await chrome.storage.sync.set({
-      [currentVideoId]: JSON.stringify(updatedBookmarks),
-    });
-    setBookmarks(updatedBookmarks);
+    // const updatedBookmarks = bookmarks
+    //   .filter((b) => b.id !== bookmark.id)
+    //   .sort((a, b) => a.time - b.time);
+
+    // await chrome.storage.sync.set({
+    //   [currentVideoId]: JSON.stringify(updatedBookmarks),
+    // });
+    // setBookmarks(updatedBookmarks);
   };
 
   return (

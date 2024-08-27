@@ -22,7 +22,7 @@ import { nanoid } from "nanoid";
   let currentVideoId = "";
   let currentVideoBookmarks: Bookmark[] = [];
 
-  chrome.runtime.onMessage.addListener((obj) => {
+  chrome.runtime.onMessage.addListener((obj, _, response) => {
     const { type, value, videoId } = obj;
 
     switch (type) {
@@ -33,6 +33,16 @@ import { nanoid } from "nanoid";
         break;
       case "PLAY":
         if (youtubePlayer) youtubePlayer.currentTime = value;
+        break;
+
+      case "DELETE_BOOKMARK":
+        currentVideoBookmarks = currentVideoBookmarks.filter(
+          (b) => b.id !== value
+        );
+        chrome.storage.sync.set({
+          [currentVideoId]: JSON.stringify(currentVideoBookmarks),
+        });
+        response(currentVideoBookmarks);
         break;
 
       default:
@@ -54,7 +64,6 @@ import { nanoid } from "nanoid";
         document.getElementsByClassName("bookmark-btn")[0];
       currentVideoBookmarks = await fetchBookmarks();
 
-      console.log("bookmarkBtnExists", bookmarkBtnExists);
       if (bookmarkBtnExists) return;
 
       const bookmarkBtn = document.createElement("img");
@@ -88,12 +97,12 @@ import { nanoid } from "nanoid";
 
       currentVideoBookmarks = await fetchBookmarks();
 
-      const updatedBookmarks = [...currentVideoBookmarks, newBookmark].sort(
+      currentVideoBookmarks = [...currentVideoBookmarks, newBookmark].sort(
         (a, b) => a.time - b.time
       );
 
       await chrome.storage.sync.set({
-        [currentVideoId]: JSON.stringify(updatedBookmarks),
+        [currentVideoId]: JSON.stringify(currentVideoBookmarks),
       });
     } catch (error) {
       console.log("addNewBookmarkEventHandler", error);
