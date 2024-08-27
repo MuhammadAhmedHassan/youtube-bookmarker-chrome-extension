@@ -40,3 +40,30 @@
 .read-the-docs {
   color: #888;
 }
+
+[role="button"] {
+  cursor: pointer;
+}
+
+.bookmark-list {
+  padding: 0px;
+  margin: 0px;
+}
+
+.bookmark-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bookmark-item > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.bookmark-item > div img {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+}
