@@ -1,22 +1,5 @@
 import { nanoid } from "nanoid";
 
-// import { createRoot } from "react-dom/client";
-
-// const App = () => {
-//   return (
-//     <div>
-//       <h1>Hello from Content Script!</h1>
-//     </div>
-//   );
-// };
-
-// const rootElement = document.createElement("div");
-// rootElement.id = "my-chrome-extension-root";
-// document.body.appendChild(rootElement);
-
-// const root = createRoot(rootElement);
-// root.render(<App />);
-
 (() => {
   let youtubeLeftControls: HTMLDivElement, youtubePlayer: HTMLVideoElement;
   let currentVideoId = "";
